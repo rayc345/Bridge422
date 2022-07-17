@@ -1,0 +1,93 @@
+<!DOCTYPE CrossStudio_Project_File>
+<solution Name="Test422" target="8" version="2">
+  <project Name="Test422">
+    <configuration
+      LIBRARY_IO_TYPE="RTT"
+      Name="Common"
+      arm_architecture="v7EM"
+      arm_compiler_variant="SEGGER"
+      arm_core_type="Cortex-M4"
+      arm_endian="Little"
+      arm_fp_abi="Hard"
+      arm_fpu_type="FPv4-SP-D16"
+      arm_linker_variant="SEGGER"
+      arm_target_device_name="STM32L422RB"
+      arm_target_interface_type="SWD"
+      c_preprocessor_definitions="USE_HAL_DRIVER;STM32L422xx;USE_FULL_LL_DRIVER"
+      c_user_include_directories="../USB_DEVICE/App;../USB_DEVICE/Target;../Core/Inc;../Drivers/STM32L4xx_HAL_Driver/Inc;../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../Drivers/CMSIS/Device/ST/STM32L4xx/Include;../Drivers/CMSIS/Include;../SWD"
+      debug_register_definition_file="$(ProjectDir)/STM32L4x2_Registers.xml"
+      debug_start_from_entry_point_symbol="No"
+      debug_target_connection="J-Link"
+      gcc_c_language_standard="c17"
+      gcc_cplusplus_language_standard="c++14"
+      gcc_debugging_level="Level 3"
+      gcc_optimization_level="Level 2 balanced"
+      link_linker_script_file="$(ProjectDir)/STM32L4xx_Flash.icf"
+      linker_memory_map_file="C:/Users/Admin/Documents/SEGGER Embedded Studio for ARM Projects/Test422/STM32L422RBIx_MemoryMap.xml"
+      linker_printf_width_precision_supported="Yes"
+      project_directory=""
+      project_type="Executable" />
+    <folder Name="SWD">
+      <file file_name="../SWD/swd_pin.h" />
+      <file file_name="../SWD/debug_cm.h" />
+      <file file_name="../SWD/swd.c" />
+      <file file_name="../SWD/swd.h" />
+    </folder>
+    <folder Name="Middlewares/USB_Device_Library">
+      <file file_name="../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c" />
+      <file file_name="../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c" />
+      <file file_name="../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c" />
+      <file file_name="../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c" />
+    </folder>
+    <folder Name="Drivers/STM32L4xx_HAL_Driver">
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_utils.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_usb.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_usart.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_rcc.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_gpio.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_exti.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_dma.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pcd_ex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pcd.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma_ex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_tim.c" />
+    </folder>
+    <folder Name="Drivers/CMSIS">
+      <file file_name="../Core/Src/system_stm32l4xx.c" />
+    </folder>
+    <folder Name="Application/User/USB_DEVICE/Target">
+      <file file_name="../USB_DEVICE/Target/usbd_conf.c" />
+    </folder>
+    <folder Name="Application/User/USB_DEVICE/App">
+      <file file_name="../USB_DEVICE/App/usbd_desc.c" />
+      <file file_name="../USB_DEVICE/App/usbd_cdc_if.c" />
+      <file file_name="../USB_DEVICE/App/usb_device.c" />
+    </folder>
+    <folder Name="Application/User/Core">
+      <file file_name="../Core/Src/stm32l4xx_it.c" />
+      <file file_name="../Core/Src/stm32l4xx_hal_msp.c" />
+      <file file_name="../Core/Src/main.c" />
+    </folder>
+    <folder Name="Startup">
+      <file file_name="STM32L4xx_Startup.s" />
+      <file file_name="stm32l422xx_Vectors.s" />
+      <file file_name="SEGGER_THUMB_Startup.s" />
+    </folder>
+  </project>
+</solution>
