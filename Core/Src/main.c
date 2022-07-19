@@ -330,7 +330,7 @@ void OnFirmRxForNewRecv(void)
 
   if (!SW_InitDebug())
     printf("Failed to Init SWD\n");
-    
+
   HAL_Delay(10);
   if (!SW_HaltCore())
     printf("Failed to halt\n");
@@ -426,8 +426,8 @@ int main(void)
   //   if (!SW_HaltCore())
   //     printf("Failed to halt\n");
 
-  //   uint32_t *pCode = (uint32_t *)0x0801E000;
-  //   if (!SW_WriteMem(0x20000000, pCode, 0x1058))
+  //   uint32_t *pCode = (uint32_t *)0x08013100;
+  //   if (!SW_WriteMem(0x00000000, pCode, 0xCEB0))
   //     printf("Failed to write\n");
 
   //   if (!SW_WriteCoreReg(13, *pCode))
@@ -435,11 +435,11 @@ int main(void)
   //   if (!SW_WriteCoreReg(15, *(pCode + 1)))
   //     printf("Failed to Write REG 15\n");
 
-  //   if (!SW_WriteData(0xE000ED08, 0x20000000))
+  //   if (!SW_WriteData(0xE000ED08, 0x00000000))
   //     printf("Failed to SET VTOR\n");
 
   //   uint32_t uBuffer[16];
-  //   if (!SW_ReadData(0xE000ED08, uBuffer) || uBuffer[0] != 0x20000000)
+  //   if (!SW_ReadData(0xE000ED08, uBuffer) || uBuffer[0] != 0x00000000)
   //     printf("Wrong VTOR\n");
 
   //   if (!SW_ReadCoreReg(13, uBuffer))
@@ -459,15 +459,16 @@ int main(void)
   //   while (1)
   //   {
   //     HAL_Delay(1000);
-  //     if (!SW_ReadCoreReg(13, uBuffer))
+  //     uint8_t uBuffer8[16];
+  //     if (!SW_ReadCoreReg(13, (uint32_t*)uBuffer8))
   //       printf("Failed to REG 13\n");
-  //     if (!SW_ReadCoreReg(15, uBuffer + 1))
+  //     if (!SW_ReadCoreReg(15, (uint32_t*)(uBuffer8 + 4)))
   //       printf("Failed to REG 15\n");
 
-  //     if (!SW_ReadData(DBG_ICSR, uBuffer + 2))
+  //     if (!SW_ReadData(DBG_ICSR, (uint32_t*)(uBuffer8 + 8)))
   //       printf("Failed to ICSR\n");
 
-  //     printf("SP PC %08X %08X ICSR %08X\n", uBuffer[0], uBuffer[1], uBuffer[2]);
+  //     printf("SP PC %08X %08X ICSR %08X\n", *((uint32_t *)(uBuffer8)), *((uint32_t *)(uBuffer8 + 4)), *((uint32_t *)(uBuffer8 + 8)));
   //   }
   // }
   // LL_GPIO_SetPinMode(SWDIO_GPIO_Port, SWDIO_Pin, LL_GPIO_MODE_INPUT);
