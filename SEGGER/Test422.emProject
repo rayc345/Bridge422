@@ -23,7 +23,7 @@
       gcc_debugging_level="Level 3"
       gcc_optimization_level="Level 2 balanced"
       link_linker_script_file="$(ProjectDir)/STM32L4xx_Flash.icf"
-      linker_memory_map_file="C:/Users/Admin/Documents/SEGGER Embedded Studio for ARM Projects/Test422/STM32L422RBIx_MemoryMap.xml"
+      linker_memory_map_file="$(ProjectDir)/STM32L422RBIx_MemoryMap.xml"
       linker_printf_width_precision_supported="Yes"
       project_directory=""
       project_type="Executable" />

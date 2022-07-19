@@ -57,12 +57,16 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="374" useTextEdit="1" path="../Core/Src/main.c" left="0" selected="1" top="360" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="378" useTextEdit="1" path="../Core/Src/main.c" left="0" selected="1" top="366" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="26" y="222" useTextEdit="1" openedFrom="C:/Users/Admin/Documents/Test422/Core/Src/main.c" path="C:/Program Files/SEGGER/SEGGER Embedded Studio for ARM 6.32b/include/stdatomic.h" left="0" top="210" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="41" y="229" useTextEdit="1" openedFrom="C:/Program Files/SEGGER/SEGGER Embedded Studio for ARM 6.32b/include/stdatomic.h" path="C:/Program Files/SEGGER/SEGGER Embedded Studio for ARM 6.32b/include/stdint.h" left="0" top="214" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="5" y="101" useTextEdit="1" path="../SWD/swd_pin.h" left="0" top="89" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="12" useTextEdit="1" path="../SWD/swd.c" left="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="1" y="93" useTextEdit="1" path="../Core/Src/stm32l4xx_it.c" left="0" top="78" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="8" y="54" useTextEdit="1" path="../SWD/swd_pin.h" left="0" top="48" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="23" y="198" useTextEdit="1" openedFrom="C:/Users/Admin/Documents/Bridge422my/Core/Src/main.c" path="../SWD/swd.c" left="0" top="176" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="88" useTextEdit="1" path="../Core/Src/stm32l4xx_it.c" left="0" top="78" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="41" y="16" useTextEdit="1" path="STM32L4xx_Flash.icf" left="0" top="16" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="43" y="3" useTextEdit="1" path="STM32L422RBIx_MemoryMap.xml" left="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="118" useTextEdit="1" path="STM32L4xx_Startup.s" left="0" top="102" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="339" useTextEdit="1" path="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c" left="0" top="332" codecName="Default"/>
  </Files>
- <EMStudioWindow activeProject="Test422" fileDialogDefaultFilter="*" autoConnectTarget="J-Link" buildConfiguration="Common" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="C:/Users/Admin/Documents/Test422/SWD" debugSearchPath="" autoConnectCapabilities="3711"/>
+ <EMStudioWindow activeProject="Test422" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Common" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="C:/Users/Admin/Documents/Test422/SWD" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>

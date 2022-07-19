@@ -49,13 +49,13 @@ __STATIC_FORCEINLINE void SWDIO_OUT(const uint8_t bit)
 
 __STATIC_FORCEINLINE void PIN_DELAY(void)
 {
-    // TIM6->CNT = 0;
-    // while (TIM6->CNT <= 2)
-    // {
-    // }
-    __ASM volatile(
-        // "MOV r0, r0\n"
-        "MOV r0, r0\n");
+    TIM6->CNT = 0;
+    while (TIM6->CNT <= 5)
+    {
+    }
+    // __ASM volatile(
+    //     "MOV r0, r0\n"
+    //     "MOV r0, r0\n");
 }
 
 __STATIC_FORCEINLINE uint32_t SW_READ_BIT(void)

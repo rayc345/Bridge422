@@ -45,7 +45,7 @@ bool SW_WriteBlock(const uint32_t addr, uint32_t *buf, const uint16_t len);
 bool SW_ReadMem(uint32_t address, uint32_t *data, uint32_t size);
 bool SW_WriteMem(uint32_t address, uint32_t *data, uint32_t size);
 
-// bool SW_HaltCore(void);
+bool SW_HaltCore(void);
 bool SW_RestoreCore(void);
 
 bool SW_WriteCoreReg(const uint32_t n, uint32_t val);

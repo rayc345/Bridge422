@@ -330,6 +330,10 @@ void OnFirmRxForNewRecv(void)
 
   if (!SW_InitDebug())
     printf("Failed to Init SWD\n");
+    
+  HAL_Delay(10);
+  if (!SW_HaltCore())
+    printf("Failed to halt\n");
 
   uFirmWritePos = *uBuffer;
   uFirmSize = *(uBuffer + 1);
@@ -416,32 +420,58 @@ int main(void)
 
   // if (!SW_InitDebug())
   //   printf("Failed to Init SWD\n");
+  // else
+  // {
+  //   HAL_Delay(10);
+  //   if (!SW_HaltCore())
+  //     printf("Failed to halt\n");
 
-  // uint32_t *pCode = (uint32_t *)0x08010000;
-  // if (!SW_WriteMem(0x00000000, pCode, 0xC618))
-  //   printf("Failed to write\n");
+  //   uint32_t *pCode = (uint32_t *)0x0801E000;
+  //   if (!SW_WriteMem(0x20000000, pCode, 0x1058))
+  //     printf("Failed to write\n");
 
-  // if (!SW_WriteCoreReg(13, *pCode))
-  //   printf("Failed to Write REG 13\n");
-  // if (!SW_WriteCoreReg(15, *(pCode + 1)))
-  //   printf("Failed to Write REG 15\n");
+  //   if (!SW_WriteCoreReg(13, *pCode))
+  //     printf("Failed to Write REG 13\n");
+  //   if (!SW_WriteCoreReg(15, *(pCode + 1)))
+  //     printf("Failed to Write REG 15\n");
 
-  // if (!SW_WriteData(0xE000ED08, 0x00000000))
-  //   printf("Failed to SET VTOR\n");
+  //   if (!SW_WriteData(0xE000ED08, 0x20000000))
+  //     printf("Failed to SET VTOR\n");
 
-  // uint32_t uBuffer[16];
-  // if (!SW_ReadData(0xE000ED08, uBuffer) || uBuffer[0] != 0x00000000)
-  //   printf("Wrong VTOR\n");
+  //   uint32_t uBuffer[16];
+  //   if (!SW_ReadData(0xE000ED08, uBuffer) || uBuffer[0] != 0x20000000)
+  //     printf("Wrong VTOR\n");
 
-  // if (!SW_ReadCoreReg(13, uBuffer))
-  //   printf("Failed to REG 13\n");
-  // if (!SW_ReadCoreReg(15, uBuffer + 1))
-  //   printf("Failed to REG 15\n");
-  // printf("SP PC %08X %08X\n", uBuffer[0], uBuffer[1]);
+  //   if (!SW_ReadCoreReg(13, uBuffer))
+  //     printf("Failed to REG 13\n");
+  //   if (!SW_ReadCoreReg(15, uBuffer + 1))
+  //     printf("Failed to REG 15\n");
 
-  // if (!SW_RestoreCore())
-  //   printf("Failed to Go SWD\n");
-  // SendIdle();
+  //   if (!SW_ReadData(DBG_ICSR, uBuffer + 2))
+  //     printf("Failed to ICSR\n");
+
+  //   printf("SP PC %08X %08X ICSR %08X\n", uBuffer[0], uBuffer[1], uBuffer[2]);
+
+  //   if (!SW_RestoreCore())
+  //     printf("Failed to Go SWD\n");
+  //   SendIdle();
+
+  //   while (1)
+  //   {
+  //     HAL_Delay(1000);
+  //     if (!SW_ReadCoreReg(13, uBuffer))
+  //       printf("Failed to REG 13\n");
+  //     if (!SW_ReadCoreReg(15, uBuffer + 1))
+  //       printf("Failed to REG 15\n");
+
+  //     if (!SW_ReadData(DBG_ICSR, uBuffer + 2))
+  //       printf("Failed to ICSR\n");
+
+  //     printf("SP PC %08X %08X ICSR %08X\n", uBuffer[0], uBuffer[1], uBuffer[2]);
+  //   }
+  // }
+  // LL_GPIO_SetPinMode(SWDIO_GPIO_Port, SWDIO_Pin, LL_GPIO_MODE_INPUT);
+  // LL_GPIO_SetPinMode(SWCLK_GPIO_Port, SWCLK_Pin, LL_GPIO_MODE_INPUT);
 
   /* USER CODE END 2 */
 
@@ -533,7 +563,7 @@ static void MX_TIM6_Init(void)
   /* USER CODE BEGIN TIM6_Init 1 */
 
   /* USER CODE END TIM6_Init 1 */
-  TIM_InitStruct.Prescaler = 20 - 1;
+  TIM_InitStruct.Prescaler = 1 - 1;
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
   TIM_InitStruct.Autoreload = 65535;
   LL_TIM_Init(TIM6, &TIM_InitStruct);

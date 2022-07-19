@@ -189,14 +189,12 @@ bool SW_InitDebug(void)
     if ((uTemp & S_HALT) == 0)
         return false;
 
-    // HAL_Delay(1);
-    //  Enable halt on reset
-    // if (!SW_WriteData(DBG_EMCR, VC_CORERESET))
-    //     return false;
+    if (!SW_WriteData(DBG_EMCR, VC_CORERESET))
+        return false;
 
-    // // reset core
-    // if (!SW_WriteData(DBG_AIRCR, 0x05FA0004))
-    //     return false;
+    // reset core
+    if (!SW_WriteData(DBG_AIRCR, 0x05FA0004))
+        return false;
 
     // // HAL_Delay(1);
     // if (!SW_ReadData(DBG_HCSR, &uTemp))
@@ -377,15 +375,15 @@ bool SW_WriteMem(uint32_t address, uint32_t *data, uint32_t size)
 #define REGWnR (1 << 16)
 #define MAX_TIMEOUT 10000
 
-// bool SW_HaltCore(void)
-// {
-//     if (!SW_WriteData(DBG_HCSR, DBGKEY | C_HALT | C_DEBUGEN))
-//         return false;
-//     uint32_t val;
-//     if (!SW_ReadData(DBG_HCSR, &val))
-//         return false;
-//     return val & S_HALT;
-// }
+bool SW_HaltCore(void)
+{
+    if (!SW_WriteData(DBG_HCSR, DBGKEY | C_HALT | C_DEBUGEN))
+        return false;
+    uint32_t val;
+    if (!SW_ReadData(DBG_HCSR, &val))
+        return false;
+    return val & S_HALT;
+}
 
 bool SW_RestoreCore(void)
 {
@@ -393,13 +391,13 @@ bool SW_RestoreCore(void)
         return false;
     if (!SW_WriteData(DBG_HCSR, DBGKEY))
         return false;
-    if (!SW_WriteDP(DP_CTRL_STAT, 0))
-        return false;
-    return true;
-    // uint32_t val;
-    // if (!SW_ReadData(DBG_HCSR, &val))
+    // if (!SW_WriteDP(DP_CTRL_STAT, 0))
     //     return false;
-    // return (val & S_HALT) == 0;
+    // return true;
+    uint32_t val;
+    if (!SW_ReadData(DBG_HCSR, &val))
+        return false;
+    return (val & S_HALT) == 0;
 }
 
 bool SW_WriteCoreReg(const uint32_t n, uint32_t val)
