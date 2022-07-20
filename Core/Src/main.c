@@ -65,7 +65,7 @@ atomic_bool bCDCTXGoing;
 atomic_bool bTXGoing;
 bool bWorking;
 
-uint8_t Firmware_Buffer[10240];
+uint8_t Firmware_Buffer[10252];
 atomic_uint uFirmInPos;
 uint32_t uFirmOutPos;
 
@@ -73,6 +73,7 @@ atomic_uint CDCRxCallback;
 
 uint32_t uFirmWritePos;
 uint32_t uFirmSize;
+uint32_t uFirmWritten;
 
 /* USER CODE END PV */
 
@@ -250,8 +251,6 @@ bool CDCGotReceiveData(uint8_t *dest, const uint32_t size, const bool bBlocking)
 {
   if (size == 0)
     return true;
-  // if (size > 150)
-  //   printf("error");
   uint32_t ReceivedData;
   do
   {
@@ -271,7 +270,6 @@ bool CDCGotReceiveData(uint8_t *dest, const uint32_t size, const bool bBlocking)
       {
         uint32_t uFirstPart = sizeof(Firmware_Buffer) - uFirmOutPos;
         memcpy(dest, Firmware_Buffer + uFirmOutPos, uFirstPart);
-        // printf("Ring buffer %08X", uFirstPart, size - uFirstPart);
         memcpy(dest + uFirstPart, Firmware_Buffer, size - uFirstPart);
         uFirmOutPos = size - uFirstPart;
       }
@@ -281,81 +279,100 @@ bool CDCGotReceiveData(uint8_t *dest, const uint32_t size, const bool bBlocking)
   return false;
 }
 
-uint32_t uBuffer[64];
-void OnFirmRxForOngoing(void)
+void SendResultToCDC(uint16_t uResult)
 {
-  uint32_t uFirmWritten = 0;
-  do
-  {
-    uint32_t uRemain = uFirmSize - uFirmWritten;
-    uint32_t uGotThisTime = uRemain > 64 ? 64 : uRemain;
-    CDCGotReceiveData((uint8_t *)uBuffer, uGotThisTime, true);
-
-    // printf("Write Firm %08X %d\n", uFirmWritePos + uFirmWritten, uGotThisTime);
-    if (!SW_WriteMem(uFirmWritePos + uFirmWritten, uBuffer, uGotThisTime))
-      printf("Failed to write\n");
-
-    // SW_WriteDP(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR);
-    uFirmWritten += uGotThisTime;
-  } while (uFirmWritten < uFirmSize);
-
-  // printf("Write Finish\n");
-
-  uint32_t uMSP, uReset;
-  if (!SW_ReadData(uFirmWritePos, &uMSP))
-    printf("Failed to get MSP\n");
-  if (!SW_ReadData(uFirmWritePos + 4, &uReset))
-    printf("Failed to get Reset\n");
-  uReset &= 0xFFFFFFFE;
-  if (!SW_WriteCoreReg(13, uMSP))
-    printf("Failed to Write REG 13\n");
-  if (!SW_WriteCoreReg(15, uReset))
-    printf("Failed to Write REG 15\n");
-
-  if (!SW_WriteData(0xE000ED08, uFirmWritePos))
-    printf("Failed to SET VTOR\n");
-
-  printf("VTOR SP PC %08X %08X %08X\n", uFirmWritePos, uMSP, uReset);
-
-  if (!SW_RestoreCore())
-    printf("Failed to Go SWD\n");
-  SendIdle();
-
-  atomic_store(&CDCRxCallback, 0);
+  CDC_Transmit_FS((uint8_t *)&uResult, 2);
 }
 
+uint8_t uBufferFirm[10240];
 void OnFirmRxForNewRecv(void)
 {
-  CDCGotReceiveData((uint8_t *)uBuffer, 3 * 4, true);
-
-  if (!SW_InitDebug())
-    printf("Failed to Init SWD\n");
-
-  HAL_Delay(10);
-  if (!SW_HaltCore())
-    printf("Failed to halt\n");
-
-  uFirmWritePos = *uBuffer;
-  uFirmSize = *(uBuffer + 1);
-
-  uint32_t uRegSet = *(uBuffer + 2);
-
-  // printf("Addr %08X size %08X Regs: %d\n", uFirmWritePos, uFirmSize, uRegSet);
-  CDCGotReceiveData((uint8_t *)uBuffer, uRegSet * 8, true);
-  for (uint8_t i = 0; i < uRegSet; i++)
+  CDCGotReceiveData(uBufferFirm, 4, true);
+  uint16_t uRecvLen, uCommand;
+  memcpy(&uRecvLen, uBufferFirm, 2);
+  memcpy(&uCommand, uBufferFirm + 2, 2);
+  CDCGotReceiveData(uBufferFirm, uRecvLen, true);
+  if (uCommand == 0x3)
   {
-    uint32_t uData = *(uBuffer + 2 * i);
-    uint32_t uAddr = *(uBuffer + 1 + 2 * i);
-    // printf("Set Reg %08X %08X\n", uAddr, uData);
-    if (!SW_WriteData(uAddr, uData))
-      printf("Failed to SET Reg Data\n");
-    uint32_t uGetData;
-    if (!SW_ReadData(uAddr, &uGetData) && uGetData != uData)
-      printf("SET Wrong Reg Data\n");
-    // printf("Write %08X -> %08X\n", uData, uAddr);
-    // SW_WriteDP(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR);
+    memcpy(&uFirmWritePos, uBufferFirm, 4);
+    memcpy(&uFirmSize, uBufferFirm + 4, 4);
+    uRecvLen -= 8;
+    uFirmWritten = 0;
+    // printf("Start Firm %08X %d\n", uFirmWritePos, uFirmSize);
+    bool bSuccess = true;
+
+    if (!SW_InitDebug())
+      bSuccess = false;
+
+    if (bSuccess && !SW_HaltCore())
+      bSuccess = false;
+
+    if (bSuccess)
+    {
+      uint8_t *pRegs = uBufferFirm + 8;
+      while (uRecvLen >= 8)
+      {
+        uint32_t uData, uAddr;
+        memcpy(&uData, pRegs, 4);
+        memcpy(&uAddr, pRegs + 4, 4);
+        if (!SW_WriteData(uAddr, uData))
+        {
+          bSuccess = false;
+          break;
+        }
+        uint32_t uGetData;
+        if (!SW_ReadData(uAddr, &uGetData) && uGetData != uData)
+        {
+          bSuccess = false;
+          break;
+        }
+        uRecvLen -= 8;
+        pRegs += 8;
+        // printf("Write %08X -> %08X\n", uData, uAddr);
+      }
+    }
+    if (bSuccess)
+      SendResultToCDC(0);
+    else
+      SendResultToCDC(1);
   }
-  atomic_store(&CDCRxCallback, (uint32_t)OnFirmRxForOngoing);
+  else if (uCommand == 0x5)
+  {
+    do
+    {
+      uint32_t uWriteSize = uRecvLen;
+      if (uRecvLen & 0x03)
+        uWriteSize = uRecvLen & 0xFFFFFFFC + 4;
+      if (!SW_WriteMem(uFirmWritePos + uFirmWritten, (uint32_t *)uBufferFirm, uRecvLen))
+        break;
+      // printf("Write Firm %08X, %d %d\n", uFirmWritePos + uFirmWritten, uWriteSize, uRecvLen);
+      uFirmWritten += uRecvLen;
+
+      if (uFirmWritten == uFirmSize)
+      {
+        // printf("Write Finish\n");
+        uint32_t uMSP, uReset;
+        if (!SW_ReadData(uFirmWritePos, &uMSP))
+          break;
+        if (!SW_ReadData(uFirmWritePos + 4, &uReset))
+          break;
+        uReset &= 0xFFFFFFFE;
+        if (!SW_WriteCoreReg(13, uMSP))
+          break;
+        if (!SW_WriteCoreReg(15, uReset))
+          break;
+        if (!SW_WriteData(0xE000ED08, uFirmWritePos))
+          break;
+        // printf("VTOR SP PC %08X %08X %08X\n", uFirmWritePos, uMSP, uReset);
+        if (!SW_RestoreCore())
+          break;
+        SendIdle();
+        atomic_store(&CDCRxCallback, 0);
+      }
+      SendResultToCDC(0);
+    } while (0);
+    SendResultToCDC(1);
+  }
 }
 
 void OnBaudrateChange(uint32_t uBandrate)
@@ -487,7 +504,6 @@ int main(void)
     if (uCallback != 0)
     {
       cdc_writeFirm pCallback = (cdc_writeFirm)uCallback;
-      atomic_store(&CDCRxCallback, 0);
       pCallback();
     }
   }

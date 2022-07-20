@@ -161,18 +161,13 @@ bool SW_InitDebug(void)
         return false;
 
     uint32_t uTemp;
-    // /* Ensure CTRL/STAT register selected in DPBANKSEL */
-    // if (!SW_WriteDP(DP_SELECT, 0))
-    //     return false;
+
     uAP = 0;
     uAPBank = 0;
 
-    // if (!SW_WriteAP(AP_CSW, 0xB000000 | CSW_SIZE32 | CSW_SADDRINC))
-    //     return false;
-
     if (!SW_ReadAP(AP_IDR, &uTemp))
         return false;
-    printf("AP_IDR:0x%08X\r\n", uTemp);
+    // printf("AP_IDR:0x%08X\r\n", uTemp);
 
     if (!SW_ReadAP(AP_CSW, &uTemp))
         return false;
@@ -199,7 +194,7 @@ bool SW_InitDebug(void)
     if (!SW_WriteAP(AP_DRW, 0x05FA0004))
         return false;
 
-    HAL_Delay(10);
+    HAL_Delay(1);
 
     SW_JTAG2SWD();
 
@@ -207,10 +202,7 @@ bool SW_InitDebug(void)
 
     SW_ReadDP(DP_IDCODE, &uTemp);
 
-    // if (!SW_ReadDP(DP_IDCODE, &uTemp))
-    //     return false;
-
-    printf("DP_IDCODE:0x%08X\r\n", uTemp);
+    HAL_Delay(1);
 
     if (!SW_WriteDP(DP_ABORT, STKCMPCLR | STKERRCLR | WDERRCLR | ORUNERRCLR))
         return false;
@@ -219,27 +211,11 @@ bool SW_InitDebug(void)
     if (!SW_WriteDP(DP_CTRL_STAT, CSYSPWRUPREQ | CDBGPWRUPREQ))
         return false;
 
-    // /* Ensure CTRL/STAT register selected in DPBANKSEL */
-    // if (!SW_WriteDP(DP_SELECT, 0))
-    //     return false;
     uAP = 0;
     uAPBank = 0;
 
-    // if (!SW_WriteAP(AP_CSW, 0xB000000 | CSW_SIZE32 | CSW_SADDRINC))
-    //     return false;
-
     if (!SW_ReadAP(AP_IDR, &uTemp))
         return false;
-    printf("AP_IDR:0x%08X\r\n", uTemp);
-
-    // if (!SW_WriteData(DBG_AIRCR, 0x05FA0004))
-    //     return false;
-
-    // if (!SW_ReadData(DBG_HCSR, &uTemp))
-    //     return false;
-    // if ((uTemp & (S_RESET_ST | S_HALT)) == (S_RESET_ST | S_HALT))
-    //     return true;
-    // printf("DBG_HCSR:0x%08X\r\n", uTemp);
 
     return true;
 }
